@@ -56,7 +56,6 @@ const getCommitID = (msg) => {
   await execCommand("git push -u origin master");
   log("Pushing to both branches done! & going back to stage branch");
   await execCommand("git checkout stage");
-  spinner.stop();
   log("All process has been done!");
 })();
 
