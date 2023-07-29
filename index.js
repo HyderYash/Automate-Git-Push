@@ -2,7 +2,6 @@ import { exec } from "child_process";
 import { input } from "@inquirer/prompts";
 import confirm from "@inquirer/confirm";
 import colors from "colors";
-import ora from "ora";
 
 const execCommand = (command, getCommit = false) => {
   return new Promise((resolve) => {
@@ -47,16 +46,15 @@ const getCommitID = (msg) => {
   await execCommand("git add -A");
   const commitMsg = await input({ message: "Enter commit message:" });
   await execCommand(`git commit -m "${commitMsg}"`, true);
-  const spinner = ora("Pushing to stage branch").start();
+  log("Pushing to stage branch");
   await execCommand("git push -u origin stage");
-  spinner.text = "Checking out to master\n";
+  log("Checking out to master");
   await execCommand("git checkout master");
-  spinner.text = "Merging Stage\n";
+  log("Merging Stage");
   await execCommand("git merge stage");
-  spinner.text = "Pushing to master branch\n";
+  log("Pushing to master branch");
   await execCommand("git push -u origin master");
-  spinner.text =
-    "Pushing to both branches done! & going back to stage branch\n";
+  log("Pushing to both branches done! & going back to stage branch");
   await execCommand("git checkout stage");
   spinner.stop();
   log("All process has been done!");
