@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import { input } from "@inquirer/prompts";
 import confirm from "@inquirer/confirm";
-import colors from "colors";
+import chalk from "chalk";
 
 const execCommand = (command, getCommit = false) => {
   return new Promise((resolve) => {
@@ -21,7 +21,7 @@ const execCommand = (command, getCommit = false) => {
 };
 
 const log = (msg, c = "green") => {
-  console.log(colors[c](msg));
+  console.log(chalk[c](msg));
 };
 
 const getCommitID = (msg) => {
@@ -58,29 +58,3 @@ const getCommitID = (msg) => {
   await execCommand("git checkout stage");
   log("All process has been done!", "bgBlue");
 })();
-
-// const readline = require("readline").createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
-
-// // Checking revert message
-
-// console.log("Adding files...");
-// execCommand("git add -A").then(async () => {
-//   readline.question("Enter the commit message: ", async (commitMessage) => {
-//     await execCommand(`git commit -m "${commitMessage}"`, true);
-//     console.log("Pushing to stage branch");
-//     await execCommand("git push -u origin stage");
-//     console.log("Checking out to master");
-//     await execCommand("git checkout master");
-//     console.log("Merging Stage");
-//     await execCommand("git merge stage");
-//     console.log("Pushing to master branch");
-//     await execCommand("git push -u origin master");
-//     console.log("Pushing to both branches done!");
-//     console.log("Going back to stage branch");
-//     await execCommand("git checkout stage");
-//     readline.close();
-//   });
-// });
