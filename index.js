@@ -1,7 +1,7 @@
-import { exec } from "child_process";
-import { input } from "@inquirer/prompts";
-import confirm from "@inquirer/confirm";
-import chalk from "chalk";
+const { exec } = require("child_process");
+const { input } = require("@inquirer/prompts");
+const confirm = require("@inquirer/confirm");
+const chalk = require("chalk");
 
 const execCommand = (command, getCommit = false) => {
   return new Promise((resolve) => {
@@ -37,7 +37,9 @@ const getCommitID = (msg) => {
 };
 
 (async function () {
-  const onStage = await confirm({ message: "Are you on stage branch?" });
+  const onStage = await confirm.default({
+    message: "Are you on stage branch?",
+  });
   if (!onStage) {
     log("Checking out to stage branch");
     await execCommand("git checkout stage");
