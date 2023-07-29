@@ -20,8 +20,8 @@ const execCommand = (command, getCommit = false) => {
   });
 };
 
-const log = (msg) => {
-  console.log(colors.green(msg));
+const log = (msg, c = "green") => {
+  console.log(colors[c](msg));
 };
 
 const getCommitID = (msg) => {
@@ -56,7 +56,7 @@ const getCommitID = (msg) => {
   await execCommand("git push -u origin master");
   log("Pushing to both branches done! & going back to stage branch");
   await execCommand("git checkout stage");
-  log("All process has been done!");
+  log("All process has been done!", "blue");
 })();
 
 // const readline = require("readline").createInterface({
