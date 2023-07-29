@@ -43,9 +43,8 @@ const getCommitID = (msg) => {
     log("Checking out to stage branch");
     await execCommand("git checkout stage");
   }
-  const addSpinner = ora("Adding files...").start();
+  log("Adding files...");
   await execCommand("git add -A");
-  addSpinner.stop();
   const commitMsg = await input({ message: "Enter commit message:" });
   await execCommand(`git commit -m "${commitMsg}"`, true);
   const spinner = ora("Pushing to stage branch").start();
