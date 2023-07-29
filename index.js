@@ -49,13 +49,14 @@ const getCommitID = (msg) => {
   await execCommand(`git commit -m "${commitMsg}"`, true);
   const spinner = ora("Pushing to stage branch").start();
   await execCommand("git push -u origin stage");
-  spinner.text = "Checking out to master";
+  spinner.text = "Checking out to master\n";
   await execCommand("git checkout master");
-  spinner.text = "Merging Stage";
+  spinner.text = "Merging Stage\n";
   await execCommand("git merge stage");
-  spinner.text = "Pushing to master branch";
+  spinner.text = "Pushing to master branch\n";
   await execCommand("git push -u origin master");
-  spinner.text = "Pushing to both branches done! & going back to stage branch";
+  spinner.text =
+    "Pushing to both branches done! & going back to stage branch\n";
   await execCommand("git checkout stage");
   spinner.stop();
   log("All process has been done!");
