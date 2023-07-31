@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "bin": "index.js",
-  "scripts": {
-    "build": "babel . -d build"
-  },
   "author": "Yash Sharma",
   "license": "ISC",
   "dependencies": {

@@ -35,6 +35,7 @@ const getCommitID = (msg) => {
     }
   });
 };
+// hello
 
 (async function () {
   const onStage = await confirm.default({
