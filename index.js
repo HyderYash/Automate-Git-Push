@@ -4,16 +4,12 @@ const confirm = require("@inquirer/confirm");
 const select = require("@inquirer/select");
 const chalk = require("chalk");
 
-const execCommand = (command, getCommit = false) => {
+const execCommand = (command) => {
   return new Promise((resolve) => {
     exec(command, async (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error}`);
         return;
-      }
-      if (getCommit === true) {
-        const commitId = await getCommitID(stdout);
-        console.log(`COMMIT ID: ${commitId}`);
       }
       console.log(stdout);
       resolve(true);
@@ -47,7 +43,7 @@ const addFileAndCommit = () => {
     log("Adding files...");
     await execCommand("git add -A");
     const commitMsg = await input({ message: "Enter commit message:" });
-    await execCommand(`git commit -m "${commitMsg}"`, true);
+    await execCommand(`git commit -m "${commitMsg}"`);
     resolve(true);
   });
 };
