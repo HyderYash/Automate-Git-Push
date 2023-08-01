@@ -43,11 +43,14 @@ const branchChanger = async (branchName) => {
   await execCommand(`git checkout ${branchName}`);
 };
 
-const addFileAndCommit = async () => {
-  log("Adding files...");
-  await execCommand("git add -A");
-  const commitMsg = await input({ message: "Enter commit message:" });
-  await execCommand(`git commit -m "${commitMsg}"`, true);
+const addFileAndCommit = () => {
+  return new Promise(async (resolve) => {
+    log("Adding files...");
+    await execCommand("git add -A");
+    const commitMsg = await input({ message: "Enter commit message:" });
+    await execCommand(`git commit -m "${commitMsg}"`, true);
+    resolve(true);
+  });
 };
 
 const pushToStageOnly = async () => {
