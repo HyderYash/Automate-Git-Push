@@ -127,7 +127,8 @@ const pushToMasterOnly = async () => {
     // helo
     if (choiceOfPush === "startFromStage") {
       await branchChanger("stage");
-      await addFileAndCommit();
+      const a = await addFileAndCommit();
+      console.log(a);
       log("Pushing to stage branch");
       await execCommand("git push -u origin stage");
       log("Checking out to master");
@@ -138,8 +139,8 @@ const pushToMasterOnly = async () => {
       await execCommand("git push -u origin master");
     } else {
       await branchChanger("master");
-      await addFileAndCommit();
-
+      const a = await addFileAndCommit();
+      console.log(a);
       log("Pushing to master branch");
       await execCommand("git push -u origin master");
       log("Checking out to stage");
