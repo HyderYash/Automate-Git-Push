@@ -38,27 +38,9 @@ const getCommitID = (msg) => {
 };
 // hello
 
-const branchChanger = () => {
-  return new Promise(async (resolve) => {
-    const onStage = await confirm.default({
-      message: "Are you on stage branch?",
-    });
-    if (!onStage) {
-      log("Checking out to stage branch");
-      await execCommand("git checkout stage");
-      resolve(true);
-      return;
-    }
-    const onMaster = await confirm.default({
-      message: "Are you on master branch?",
-    });
-    if (!onMaster) {
-      log("Checking out to master branch");
-      await execCommand("git checkout master");
-      resolve(true);
-      return;
-    }
-  });
+const branchChanger = async (branchName) => {
+  log(`Checking out to ${branchName} branch`);
+  await execCommand(`git checkout ${branchName}`);
 };
 
 const addFileAndCommit = async () => {
@@ -99,25 +81,68 @@ const pushToMasterOnly = async () => {
       },
     ],
   });
-  await branchChanger();
   if (answer === "pushToStageOnly") {
+    const onStage = await confirm.default({
+      message: "Are you on stage branch?",
+    });
+    if (!onStage) {
+      await branchChanger("stage");
+    }
     await addFileAndCommit();
     await pushToStageOnly();
-  } else if (answer === "pushToMasterOnly") {
+  }
+  if (answer === "pushToMasterOnly") {
+    const onMaster = await confirm.default({
+      message: "Are you on master branch?",
+    });
+    if (!onMaster) {
+      await branchChanger("master");
+    }
     await addFileAndCommit();
     await pushToMasterOnly();
   } else {
-    await addFileAndCommit();
-    log("Pushing to stage branch");
-    await execCommand("git push -u origin stage");
-    log("Checking out to master");
-    await execCommand("git checkout master");
-    log("Merging Stage");
-    await execCommand("git merge stage");
-    log("Pushing to master branch");
-    await execCommand("git push -u origin master");
+    const choiceOfPush = await select.default({
+      message: "Select a choice to push",
+      choices: [
+        {
+          name: "startFromStage",
+          value: "startFromStage",
+          description: "Start from stage",
+        },
+        {
+          name: "startFromMaster",
+          value: "startFromMaster",
+          description: "Start from master",
+        },
+      ],
+    });
+    if (choiceOfPush === "startFromStage") {
+      await branchChanger("stage");
+      await addFileAndCommit();
+      log("Pushing to stage branch");
+      await execCommand("git push -u origin stage");
+      log("Checking out to master");
+      await execCommand("git checkout master");
+      log("Merging Stage");
+      await execCommand("git merge stage");
+      log("Pushing to master branch");
+      await execCommand("git push -u origin master");
+    } else {
+      await branchChanger("master");
+      await addFileAndCommit();
+      log("Pushing to master branch");
+      await execCommand("git push -u origin master");
+      log("Checking out to stage");
+      await execCommand("git checkout stage");
+      log("Merging Master");
+      await execCommand("git merge master");
+      log("Pushing to stage branch");
+      await execCommand("git push -u origin stage");
+    }
+
     log("Pushing to both branches done! & going back to stage branch");
     await execCommand("git checkout stage");
   }
+
   log("All process has been done!", "bgBlue");
 })();
