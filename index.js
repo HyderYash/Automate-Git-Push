@@ -21,31 +21,16 @@ const log = (msg, c = "green") => {
   console.log(chalk[c](msg));
 };
 
-const getCommitID = (msg) => {
-  return new Promise((resolve) => {
-    const regex = /\[stage (\w+)\]/;
-    const match = msg.match(regex);
-
-    if (match && match.length >= 2) {
-      const commitId = match[1];
-      resolve(commitId);
-    }
-  });
-};
-
 const branchChanger = async (branchName) => {
   log(`Checking out to ${branchName} branch`);
   await execCommand(`git checkout ${branchName}`);
 };
 
-const addFileAndCommit = () => {
-  return new Promise(async (resolve) => {
-    log("Adding files...");
-    await execCommand("git add -A");
-    const commitMsg = await input({ message: "Enter commit message:" });
-    await execCommand(`git commit -m "${commitMsg}"`);
-    resolve(true);
-  });
+const addFileAndCommit = async () => {
+  log("Adding files...");
+  await execCommand("git add -A");
+  const commitMsg = await input({ message: "Enter commit message:" });
+  await execCommand(`git commit -m "${commitMsg}"`);
 };
 
 const pushToStageOnly = async () => {
@@ -120,8 +105,7 @@ const pushToMasterOnly = async () => {
     // helo
     if (choiceOfPush === "startFromStage") {
       await branchChanger("stage");
-      const a = await addFileAndCommit();
-      console.log(a);
+      await addFileAndCommit();
       log("Pushing to stage branch");
       await execCommand("git push -u origin stage");
       log("Checking out to master");
@@ -130,10 +114,11 @@ const pushToMasterOnly = async () => {
       await execCommand("git merge stage");
       log("Pushing to master branch");
       await execCommand("git push -u origin master");
+      log("Pushing to both branches done! & going back to original branch");
+      await execCommand("git checkout staeg");
     } else {
       await branchChanger("master");
-      const a = await addFileAndCommit();
-      console.log(a);
+      await addFileAndCommit();
       log("Pushing to master branch");
       await execCommand("git push -u origin master");
       log("Checking out to stage");
@@ -142,10 +127,9 @@ const pushToMasterOnly = async () => {
       await execCommand("git merge master");
       log("Pushing to stage branch");
       await execCommand("git push -u origin stage");
+      log("Pushing to both branches done! & going back to original branch");
+      await execCommand("git checkout master");
     }
-
-    log("Pushing to both branches done! & going back to stage branch");
-    await execCommand("git checkout stage");
   }
 
   log("All process has been done!", "bgBlue");
