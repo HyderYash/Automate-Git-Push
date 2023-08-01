@@ -61,6 +61,10 @@ const pushToMasterOnly = async () => {
 };
 
 (async function () {
+  log(
+    "YOU SHOULD HAVE CHANGES IN YOUR REPO FOR THIS SCRIPT TO RUN",
+    "bgMagentaBright"
+  );
   const answer = await select.default({
     message: "Select a choice",
     choices: [
