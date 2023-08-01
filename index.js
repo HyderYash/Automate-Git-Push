@@ -130,6 +130,7 @@ const pushToMasterOnly = async () => {
       const a = await addFileAndCommit();
       console.log(a);
       log("Pushing to stage branch");
+
       await execCommand("git push -u origin stage");
       log("Checking out to master");
       await execCommand("git checkout master");
