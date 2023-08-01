@@ -1,6 +1,7 @@
 const { exec } = require("child_process");
 const { input } = require("@inquirer/prompts");
 const confirm = require("@inquirer/confirm");
+const select = require("@inquirer/select");
 const chalk = require("chalk");
 
 const execCommand = (command, getCommit = false) => {
@@ -37,27 +38,86 @@ const getCommitID = (msg) => {
 };
 // hello
 
-(async function () {
-  const onStage = await confirm.default({
-    message: "Are you on stage branch?",
+const branchChanger = () => {
+  return new Promise(async (resolve) => {
+    const onStage = await confirm.default({
+      message: "Are you on stage branch?",
+    });
+    if (!onStage) {
+      log("Checking out to stage branch");
+      await execCommand("git checkout stage");
+      resolve(true);
+      return;
+    }
+    const onMaster = await confirm.default({
+      message: "Are you on master branch?",
+    });
+    if (!onMaster) {
+      log("Checking out to master branch");
+      await execCommand("git checkout master");
+      resolve(true);
+      return;
+    }
   });
-  if (!onStage) {
-    log("Checking out to stage branch");
-    await execCommand("git checkout stage");
-  }
+};
+
+const addFileAndCommit = async () => {
   log("Adding files...");
   await execCommand("git add -A");
   const commitMsg = await input({ message: "Enter commit message:" });
   await execCommand(`git commit -m "${commitMsg}"`, true);
-  log("Pushing to stage branch");
+};
+
+const pushToStageOnly = async () => {
+  log("Pushing ONLY to stage branch", "red");
   await execCommand("git push -u origin stage");
-  log("Checking out to master");
-  await execCommand("git checkout master");
-  log("Merging Stage");
-  await execCommand("git merge stage");
-  log("Pushing to master branch");
+};
+
+const pushToMasterOnly = async () => {
+  log("Pushing ONLY to master branch", "red");
   await execCommand("git push -u origin master");
-  log("Pushing to both branches done! & going back to stage branch");
-  await execCommand("git checkout stage");
+};
+
+(async function () {
+  const answer = await select.default({
+    message: "Select a choice",
+    choices: [
+      {
+        name: "pushToStageOnly",
+        value: "pushToStageOnly",
+        description: "Push only to stage branch",
+      },
+      {
+        name: "pushToMasterOnly",
+        value: "pushToMasterOnly",
+        description: "Push only to master branch",
+      },
+      {
+        name: "pushToBothBranches",
+        value: "pushToBothBranches",
+        description: "Push to both branches",
+      },
+    ],
+  });
+  await branchChanger();
+  if (answer === "pushToStageOnly") {
+    await addFileAndCommit();
+    await pushToStageOnly();
+  } else if (answer === "pushToMasterOnly") {
+    await addFileAndCommit();
+    await pushToMasterOnly();
+  } else {
+    await addFileAndCommit();
+    log("Pushing to stage branch");
+    await execCommand("git push -u origin stage");
+    log("Checking out to master");
+    await execCommand("git checkout master");
+    log("Merging Stage");
+    await execCommand("git merge stage");
+    log("Pushing to master branch");
+    await execCommand("git push -u origin master");
+    log("Pushing to both branches done! & going back to stage branch");
+    await execCommand("git checkout stage");
+  }
   log("All process has been done!", "bgBlue");
 })();
