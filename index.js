@@ -8,7 +8,7 @@ const execCommand = (command, getCommit = false) => {
   return new Promise((resolve) => {
     exec(command, async (error, stdout, stderr) => {
       if (error) {
-        console.log(`error: ${error.message}`);
+        console.log(`error: ${error}`);
         return;
       }
       if (getCommit === true) {
