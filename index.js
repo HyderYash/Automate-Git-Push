@@ -36,7 +36,6 @@ const getCommitID = (msg) => {
     }
   });
 };
-// hello
 
 const branchChanger = async (branchName) => {
   log(`Checking out to ${branchName} branch`);
@@ -63,7 +62,6 @@ const pushToMasterOnly = async () => {
   await execCommand("git push -u origin master");
 };
 
-// MASTER CHANGE and it should be in stage also
 (async function () {
   log(
     "YOU SHOULD HAVE CHANGES IN YOUR REPO FOR THIS SCRIPT TO RUN",
@@ -98,8 +96,7 @@ const pushToMasterOnly = async () => {
     }
     await addFileAndCommit();
     await pushToStageOnly();
-  }
-  if (answer === "pushToMasterOnly") {
+  } else if (answer === "pushToMasterOnly") {
     const onMaster = await confirm.default({
       message: "Are you on master branch?",
     });
