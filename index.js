@@ -115,7 +115,7 @@ const pushToMasterOnly = async () => {
       log("Pushing to master branch");
       await execCommand("git push -u origin master");
       log("Pushing to both branches done! & going back to original branch");
-      await execCommand("git checkout staeg");
+      await execCommand("git checkout stage");
     } else {
       await branchChanger("master");
       await addFileAndCommit();
