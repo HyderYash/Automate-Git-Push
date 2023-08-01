@@ -139,6 +139,7 @@ const pushToMasterOnly = async () => {
     } else {
       await branchChanger("master");
       await addFileAndCommit();
+
       log("Pushing to master branch");
       await execCommand("git push -u origin master");
       log("Checking out to stage");
