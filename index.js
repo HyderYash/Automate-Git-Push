@@ -121,6 +121,7 @@ const pushToMasterOnly = async () => {
         },
       ],
     });
+    // helo
     if (choiceOfPush === "startFromStage") {
       await branchChanger("stage");
       await addFileAndCommit();
