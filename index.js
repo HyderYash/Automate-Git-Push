@@ -60,6 +60,7 @@ const pushToMasterOnly = async () => {
   await execCommand("git push -u origin master");
 };
 
+// MASTER CHANGE and it should be in stage also
 (async function () {
   log(
     "YOU SHOULD HAVE CHANGES IN YOUR REPO FOR THIS SCRIPT TO RUN",
